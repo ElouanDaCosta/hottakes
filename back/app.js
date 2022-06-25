@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const userRoutes = require('./routes/user');
 const saucesRoutes = require('./routes/sauces');
@@ -20,6 +21,8 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());  //Express prend toutes les requêtes qui ont comme Content-Type  application/json  et met à disposition leur  body  directement sur l'objet req
+
+app.use('/images', express.static(path.join(__dirname, 'images'))); //on utilise express.static pour que le serveur puisse servir les images
 
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', saucesRoutes);
