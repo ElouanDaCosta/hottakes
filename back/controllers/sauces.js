@@ -41,3 +41,43 @@ exports.deleteSauce = (req, res, next) => {
         .then(() => res.status(200).json({ message: 'Sauce supprimée !' }))
         .catch(error => res.status(400).json({ error }));
 }
+
+exports.likesDislikes = (req, res, next) => {
+    sauces.findOne({ _id: req.params.id, })
+        .then((sauce) => {
+            console.log(sauce)
+            if (req.body.like === 0) {
+                sauces.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId }})
+                    .then(() => res.status(200).json({ message: 'like !' }))
+                    .catch(error => res.status(400).json({ error }));
+            } else if (req.body.like === 1) {
+                sauces.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
+                    .then(() => res.status(200).json({ message: 'dislike !' }))
+                    .catch(error => res.status(400).json({ error }));
+            } else if (req.body.like === -1) {
+                sauces.updateOne({ _id: req.params.id }, { $inc: { dislikes: 1 }, $push: { usersDisliked: req.body.userId } })
+                    .then(() => res.status(200).json({ message: 'dislike !' }))
+                    .catch(error => res.status(400).json({ error }));
+            }
+    })
+};
+
+/*exports.likesDislikes = (req, res, next) => {
+    sauces.findOne({ _id: req.params.id })
+        .then(sauce => {
+            if (req.body.like === 1) {
+                usersLiked += sauce.userId;
+                sauce.likes++;
+            } else if (req.body.like === -1) {
+                usersDisliked += sauce.userId;
+                sauce.dislikes++;
+            } else if (req.body.like === 0) {
+                usersLiked = usersLiked.replace(sauce.userId, '');
+                usersDisliked = usersDisliked.replace(sauce.userId, '');
+                sauce.likes = 0;
+                sauce.dislikes = 0;
+            }
+            sauces.save();
+        }).then(() => res.status(200).json({ message: 'Merci pour votre vote !' }))
+        .catch(error => res.status(400).json({ error }));
+};*/
