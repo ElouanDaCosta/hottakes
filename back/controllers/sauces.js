@@ -55,10 +55,8 @@ exports.deleteSauce = (req, res, next) => {
 }
 
 exports.likesDislikes = (req, res, next) => {
-    
     const userId = req.body.userId;
     const sauceId = req.params.id;
-    
     sauces.findOne({ _id: sauceId })
         .then(sauce => {
             switch (req.body.like) {
@@ -96,7 +94,6 @@ exports.likesDislikes = (req, res, next) => {
                     } else {
                         res.status(403).json({ error })
                     }
-                                
                 break;
             }
         })
